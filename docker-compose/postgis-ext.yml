@@ -1,0 +1,53 @@
+version: '2'
+services:
+  #
+  # [ server stack ]
+  #
+  # - pgadmin4
+  # - postgres + devtools
+  # - postgis + friends
+  #
+
+  pgadmin:
+    image: fenglc/pgadmin4:latest
+    container_name: pgadmin
+    links:
+      - dbm
+    volumes:
+      - /data/pgadmin:/root/.pgadmin # pgadmin4 user and session data (SQLITE)
+    ports:
+      - "5050:5050"
+    networks:
+      - backend
+    depends_on:
+      - dbm
+    restart: unless-stopped
+
+  dbm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: benizar/postgis-ext
+    container_name: dbm
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes: # named volumes, use compose -v to remove them.
+      - postgres_data:/var/lib/postgresql/:rw
+      - postgres_backups:/backups
+    ports:
+      - "5433:5432" # redirect to 5433 in case you already have postgres installed
+    networks:
+      - backend
+    restart: unless-stopped
+
+volumes: # named volumes that can be mounted by other containers
+  postgres_data:
+    driver: local
+  postgres_backups:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
