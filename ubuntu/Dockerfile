@@ -1,4 +1,4 @@
-FROM benizar/ubuntu:16.04
+FROM ubuntu:16.04
 
 #################################################################
 # Basic build-time metadata as defined at http://label-schema.org
@@ -15,19 +15,15 @@ LABEL org.label-schema.vendor="benito-zaragozi.com" \
 # Install dependencies
 ######################
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		texlive-full \
+		make \
+		wget \
+		git-core \
 	&& rm -rf /var/lib/apt/lists/*
 
-#######################
-# Install beamer-themes
-#######################
-WORKDIR /usr/local/share/texmf/tex/latex/beamer
 
-COPY resources/tex/latex/beamer/ ./
-
-# Refresh texlive
-RUN texhash
-
+#############
+# End install
+#############
 WORKDIR /source
 
 

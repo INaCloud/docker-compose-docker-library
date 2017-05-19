@@ -24,9 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /install-templates
 RUN git clone https://github.com/benizar/pandoc-templates.git
 
-WORKDIR /install-templates/pandoc-templates
-COPY /correspondence/templates/ ~/.pandoc/templates/
-
+RUN cp -a pandoc-templates/correspondence/templates/. /usr/share/pandoc/data/templates/
 
 ##################
 # End installation
