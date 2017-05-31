@@ -1,45 +1,41 @@
-.PHONY: help
 
-.DEFAULT_GOAL := help
+include env_make
 
-REPOSITORY := 'openknowledge/opendatasurvey'
-VERSION := 0.0.00
-SHELL := /bin/bash
 
-help: # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+.PHONY: all build tag_latest push push_latest run last_built_date
 
-install: ## install the dependencies for the app
-	npm install --no-optional
+all: build
 
-frontend: ## build the frontend assets
-	npm run build
 
-release: ## tag a release from master and push to origin
-	bash -c '[[ -z `git status -s` ]]'
-	git tag -a -m release $(VERSION)
-	git push --tags
+.PHONY: build postgres-ext postgis-ext
 
-test: ## run the tests for the app
-	npm test
+build: postgres-ext postgis-ext
 
-build: ## build the Docker image for this app
-	docker build --tag $(REPOSITORY) --rm=false .
+postgres-ext:
+	docker build \
+	-t $(NS)/$@:$(VERSION) \
+	-t $(NS)/$@:latest \
+	--rm \
+	$@/.
 
-login: ## Login to docker hub
-	docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
+postgis-ext: postgres-ext
+	docker build \
+	-t $(NS)/$@:$(VERSION) \
+	-t $(NS)/$@:latest \
+	--rm \
+	$@/.
 
-push: ## push the latest Docker image to DockerHub
-	docker push $(REPOSITORY)
 
-shell: ## run an interactive bash session in the container
-	docker run -it $(REPOSITORY) /bin/bash
+push:
+	docker push $(NAME):$(VERSION)
 
-run: ## run the container
-	docker run $(REPOSITORY)
+push_latest:
+	docker push $(NAME):latest
 
-deploy: build login push
+run:
+	if [[ "$(docker images -q $(NAME):$(VERSION) 2> /dev/null)" == "" ]]; then
+		docker run -it $(NAME):$(VERSION) /bin/bash
+	fi
 
-server: ## command to run the command as queue or server
-	npm start
-
+last_built_date:
+	docker inspect -f '{{ .Created }}' $(NAME):$(VERSION)

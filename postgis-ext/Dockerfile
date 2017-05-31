@@ -1,4 +1,4 @@
-FROM benizar/postgres-ext:9.6
+FROM benizar/postgres-ext
 
 # Basic build-time metadata as defined at http://label-schema.org
 LABEL org.label-schema.name="postgis-ext" \

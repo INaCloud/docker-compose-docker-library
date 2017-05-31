@@ -1,0 +1,3 @@
+NAME = docker.privaterepo:5000/yantrio/vespa
+NS = benizar
+VERSION = 0.1.0
