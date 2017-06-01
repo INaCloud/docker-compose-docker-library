@@ -1,41 +1,37 @@
+#
+# A Simple Makefile that can build docker images in a "dependant" manner
+# ramon@thebuckland.com
+#
 
-include env_make
+VERSION = 0.1.0
+NS = benizar
 
+DOCKER_IDENTITY_FILE = .docker-identity
 
-.PHONY: all build tag_latest push push_latest run last_built_date
+# this makes a list of all the "docker directories" eg: image1 image2
+docker_images := $(shell find . -maxdepth 2 -mindepth 2 -type f -name Dockerfile | xargs -L1 dirname | xargs -L1 basename )
 
-all: build
+# this makes a list of image1/Dockerfile image2/Docerfile
+docker_files := $(docker_images:%=%/Dockerfile)
 
+# this makes a list of image1/.docker-identity image2/.docker-identity
+docker_identities := $(docker_files:%Dockerfile=%$(DOCKER_IDENTITY_FILE))
 
-.PHONY: build postgres-ext postgis-ext
+$(docker_images): $(docker_identities)
 
-build: postgres-ext postgis-ext
+%/$(DOCKER_IDENTITY_FILE): %/Dockerfile
+	@imagename=$(shell dirname $<) ; \
+	dockertag=$(NS)/$${imagename}:$(VERSION) ; \
+	echo ::: Creating $${dockertag} ; \
+	(cd $$imagename && docker build -t $$dockertag .) && \
+	docker inspect -f '{{.Id}}' $${dockertag} > $$imagename/$(DOCKER_IDENTITY_FILE)
 
-postgres-ext:
-	docker build \
-	-t $(NS)/$@:$(VERSION) \
-	-t $(NS)/$@:latest \
-	--rm \
-	$@/.
+.PHONY: $(docker_images) clean all
 
-postgis-ext: postgres-ext
-	docker build \
-	-t $(NS)/$@:$(VERSION) \
-	-t $(NS)/$@:latest \
-	--rm \
-	$@/.
+all	: build
 
+build	: $(docker_images)
 
-push:
-	docker push $(NAME):$(VERSION)
-
-push_latest:
-	docker push $(NAME):latest
-
-run:
-	if [[ "$(docker images -q $(NAME):$(VERSION) 2> /dev/null)" == "" ]]; then
-		docker run -it $(NAME):$(VERSION) /bin/bash
-	fi
-
-last_built_date:
-	docker inspect -f '{{ .Created }}' $(NAME):$(VERSION)
+clean:
+	find . -name $(DOCKER_IDENTITY_FILE) | xargs -L1 -ixx sh -c '(docker rmi --force `sed "s/sha256://g" xx` )' ; \
+	find . -type f -name $(DOCKER_IDENTITY_FILE) -exec rm {} \;
