@@ -1,89 +1,69 @@
-
 #
-# For normal use, VERSION should be a snapshot version. I.e. one ending in
-# -SNAPSHOT, such as 35-SNAPSHOT
+# A Simple Makefile for building my docker stack
 #
-# When a version is final, do the following:
-# 1) Change VERSION to a non-SNAPSHOT release: 35-SNAPSHOT -> 35
-# 2) Commit the repo
-# 3) `make release' to push the images to dockerhub and tag the repo
-# 4) Change VERSION to tne next SHAPSHOT release: 35 -> 36-SNAPSHOT
-# 5) Commit
-# 6) Continue developing
-# 7) `make snapshot' as needed to push snapshot images to dockerhub
-#
+# NEED TO KNOW:
+# 1) The .DEFAULT_GOAL is in the `show_help.mk` file
+# 2) Check `show_help.mk` for self-documenting this makefile
+# 3) Edit the stack version in the `version.mk` file
+# 4) Keep an ordered list of images in the `image_list.mk` file
 
-NS = benizar
+# include version, image list, self-document, etc
+include *.mk 
 
-VERSION := 17-SNAPSHOT
-RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
+.PHONY: all
+## build the docker stack
+all: build
 
-#LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
+.PHONY: build
+build: $(IMAGES)
 
-ORGDIR=.
-
-DOCKER_IDENTITY_FILE = .docker-identity
-
-# this makes a list of all the "docker directories" eg: image1 image2
-# Maybe we can get a dependency tree sed -n 's/^ *FROM *//p;q;' $(1)/Dockerfile
-IMAGE_DIRS=$(sort $(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;))
-
-# this makes a list of image1/Dockerfile image2/Docerfile
-DOCKERFILES:=$(addsuffix /Dockerfile,$(IMAGE_DIRS))
-
-# this makes a list of image1/.docker-identity image2/.docker-identity
-IDENTITIES := $(DOCKERFILES:%Dockerfile=%$(DOCKER_IDENTITY_FILE))
-
-$(IMAGE_DIRS): $(IDENTITIES)
-
-%/$(DOCKER_IDENTITY_FILE): %/Dockerfile
-# TODO: Add metadata labels
-	docker build --rm --force-rm -t $(NS)/$(@D) $(@D) && \
-	docker inspect -f '{{.Id}}' $(NS)/$(@D) > $(@D)/$(DOCKER_IDENTITY_FILE)
-
-
-.PHONY: $(IMAGE_DIRS) all
-
-all: build  ## build the docker stack
-
-build: $(IMAGE_DIRS)
+.PHONY: $(IMAGES)
+$(IMAGES):
+	# TODO: Add metadata labels
+	docker build \
+		--rm --force-rm \
+		-t $@:$(VERSION) \
+		-t $@:latest \
+		$(@F)
 
 
 .PHONY: clean
-
-clean: ## clean the generated static files
-	find . -name $(DOCKER_IDENTITY_FILE) | xargs -L1 -ixx sh -c '(docker rmi --force `sed "s/sha256://g" xx` )' ; \
-	find . -type f -name $(DOCKER_IDENTITY_FILE) -exec rm {} \;
-
-
-#
-# Release images to Dockerhub using docker-release
-# https://github.com/kokosing/docker-release
-#
-.PHONY: release snapshot
-release: build ## release to the hub
-	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
-	docker-release --no-build --release $(VERSION) --tag-once $^
-
-snapshot: build ## release a snapshot version to the hub
-	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
-	docker-release --no-build --snapshot --tag-once $^
+## clean the generated images
+clean:
+	docker rmi \
+		--force \
+		$(addsuffix :$(VERSION),$(REV_IMAGES))\
+		$(addsuffix :latest,$(REV_IMAGES))
 
 
-#
-# Self documented Makefile
-# https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-#
-
-.PHONY: help
-
-help: ## returns this info
-	@# adapted from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-	@echo '============='
-	@echo 'Make targets'
-	@echo '============='
-	@cat Makefile | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+.PHONY: rebuild
+## clean and rebuild the images
+rebuild: clean build
 
 
-.DEFAULT_GOAL := help
+
+
+# TODO: sample commands
+.PHONY: push
+## push to dockerHub
+push:
+	docker push $(NAME):$(VERSION)
+
+.PHONY: push_latest
+## push latest to dockerHub
+push_latest:
+	docker push $(NAME):latest
+
+.PHONY: run
+## run an image if it exists
+run:
+	if [[ "$(docker images -q $(NAME):$(VERSION) 2> /dev/null)" == "" ]]; then
+		docker run -it $(NAME):$(VERSION) /bin/bash
+	fi
+
+.PHONY: last_built_date
+## get info from the stack
+last_built_date: 
+	docker inspect -f '{{ .Created }}' $(NAME):$(VERSION)
+
 
