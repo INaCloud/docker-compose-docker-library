@@ -10,12 +10,17 @@ build_date := $(shell date --rfc-3339=seconds)
 # A human friendly name for the image. For example, this could be the name of a microservice in a microservice architecture.
 # list all the "docker directories" eg: image1 image2
 # Maybe we can get a dependency tree sed -n 's/^ *FROM *//p;q;' $(1)/Dockerfile
-names := $(shell find . -name 'Dockerfile' -printf '%h\n' | sed -e 's/^\.\///') # | sort -u)
 
-names := image3 \
-	image2 \
-	image1 \
-	image4
+#names := $(shell find . -name 'Dockerfile' -printf '%h\n' | sed -e 's/^\.\///') # | sort -u)
+
+#names := image3 \
+#	image2 \
+#	image1 \
+#	image4
+
+names := ubuntu \
+	texlive \
+	pandoc
 
 # Text description of the image. May contain up to 300 characters.
 description := This image is part of my docker stack for reproducible research. Check every service README.md to see how I use it.
