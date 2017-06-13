@@ -15,7 +15,9 @@ LABEL org.label-schema.vendor="benito-zaragozi.com" \
 # Install dependencies
 ######################
 RUN apt-get update && apt-get install -y --no-install-recommends \
+		git-core \
 		pandoc \
+		pandoc-citeproc \
 	&& rm -rf /var/lib/apt/lists/*
 
 ##########################
