@@ -16,7 +16,7 @@ cleans := $(addsuffix -clean,$(images))
 
 define docker-build
 .PHONY: $1-build
-## $1
+## replace $1 by the image name you want to build
 $1-build: $2
 	# build-$(shell sed -n 's/^ *FROM *//p;q;' $(notdir $1)/Dockerfile)
 	# TODO: Add metadata labels to dockerfiles
@@ -28,6 +28,7 @@ endef
 
 define docker-clean
 .PHONY: $1-clean
+## replace $1 by the image name you want to remove
 $1-clean: $2
 	$(docker_rmi) \
 		$1:$(version) \
