@@ -18,3 +18,5 @@ Copy your themes into that folder and then refresh the database:
 ```bash
 texhash
 ```
+
+*Check the [Dockerfile](Dockerfile) for versions and dependencies.*

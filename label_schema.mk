@@ -5,7 +5,7 @@
 #
 
 # This label contains the Date/Time the image was built. The value SHOULD be formatted according to RFC 3339.
-build_date := $(shell date --rfc-3339=seconds)
+build_date :=$(shell date --rfc-3339=seconds)
 
 # A human friendly name for the image. For example, this could be the name of a microservice in a microservice architecture.
 # list all the "docker directories" eg: image1 image2
@@ -35,7 +35,7 @@ url := https://github.com/benizar/docker-library/blob/master/README.md
 vcs_url := https://github.com/benizar/docker-library
 
 # Identifier for the version of the source code from which this image was built. For example if the version control system is git this is the SHA.
-vcs_ref := master
+vcs_ref := $(shell git rev-parse --verify HEAD)
 
 # The organization that produces this image.
 vendor := benizar

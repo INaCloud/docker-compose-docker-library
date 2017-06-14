@@ -16,13 +16,21 @@ cleans := $(addsuffix -clean,$(images))
 
 define docker-build
 .PHONY: $1-build
-## replace $1 by the image name you want to build
+## replace $1 by the image name you want to build (e.g. make benizar/ubuntu-build)
 $1-build: $2
-	# build-$(shell sed -n 's/^ *FROM *//p;q;' $(notdir $1)/Dockerfile)
-	# TODO: Add metadata labels to dockerfiles
 	$(docker_build) \
 		-t $1:$(version) \
 		-t $1:latest \
+		--label org.label-schema.build-date="$(build_date)" \
+		--label org.label-schema.name=$(notdir $1) \
+		--label org.label-schema.description="$(description)" \
+		--label org.label-schema.usage="$(usage)" \
+		--label org.label-schema.url="$(url)" \
+		--label org.label-schema.vcs-url="$(vcs_url)" \
+		--label org.label-schema.vcs-ref="$(vcs_ref)" \
+		--label org.label-schema.vendor="$(vendor)" \
+		--label org.label-schema.version="$(version)" \
+		--label org.label-schema.schema-version="$(schema_version)" \
 		$(notdir $1)
 endef
 

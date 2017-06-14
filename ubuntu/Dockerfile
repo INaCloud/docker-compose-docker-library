@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set the locale
 RUN dpkg-reconfigure locales
 ENV LANG es_ES.UTF-8
-ENV LANGUAGE en_ES:es
+ENV LANGUAGE es_ES:es
 ENV LC_ALL es_ES.UTF-8
 
 # End install

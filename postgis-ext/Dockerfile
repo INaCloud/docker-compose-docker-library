@@ -1,27 +1,14 @@
 FROM benizar/postgres-ext
 
-# Basic build-time metadata as defined at http://label-schema.org
-LABEL org.label-schema.name="postgis-ext" \
-      org.label-schema.description="Postgis docker for developing extensions and testing." \
-      org.label-schema.version="9.6-2.3" \
-      org.label-schema.vcs-url="https://github.com/benizar/postgis-ext" \
-      org.label-schema.vendor="benito-zaragozi.com" \
-      org.label-schema.schema-version="1.0"
 
-
-########################
-# Versions and sources #
-########################
+# Versions and sources
 ENV POSTGIS_MAJOR 2.3
 ENV POSTGIS_VERSION 2.3.2+dfsg-1~exp2.pgdg80+1
 ENV PGROUTING_MAJOR 2.3
 ENV PGROUTING_VERSION 2.3.0-1
 
 
-################
-# Installation #
-################
-
+# Installation
 RUN apt-get update --fix-missing -y
 
 
@@ -39,13 +26,16 @@ RUN rm -rf /var/lib/apt/lists/*
 #run apt-get install -y libboost-all-dev
 #run apt-get install -y cmake
 
+
 ## osm2pgsql Requirements
 #run apt-get install -y libexpat1-dev zlib1g-dev libbz2-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
+
 
 ## compile osm2pgrouting
 #run git clone https://github.com/pgRouting/osm2pgrouting.git
 #run cd osm2pgrouting && cmake -H. -Bbuild && \
 #    cd build/ && make && make install
+
 
 ## compile osm2pgsql
 #run git clone git://github.com/openstreetmap/osm2pgsql.git
@@ -54,9 +44,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 
 
-############
-# DB SETUP #
-############
+# DB SETUP
 ADD init-db.sh /docker-entrypoint-initdb.d/init-db.sh
 
 
