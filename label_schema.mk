@@ -18,9 +18,9 @@ build_date :=$(shell date --rfc-3339=seconds)
 #	image1 \
 #	image4
 
-names := ubuntu \
-	texlive \
-	pandoc
+names := texlive \
+	pandoc \
+	jekyll
 
 # Text description of the image. May contain up to 300 characters.
 description := This image is part of my docker stack for reproducible research. Check every service README.md to see how I use it.

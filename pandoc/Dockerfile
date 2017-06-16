@@ -1,23 +1,25 @@
 FROM benizar/texlive
 
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install PANDOC
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		pandoc \
-		pandoc-citeproc && \
-	apt-get autoclean && apt-get --purge --yes autoremove && \
-	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-# Install pandoc-templates
-WORKDIR /install-templates
-RUN git clone https://github.com/benizar/pandoc-templates.git
-RUN cp -a pandoc-templates/res/templates/cv/. /usr/share/pandoc/data/templates/
-
-
-# End installation
-WORKDIR /source
-RUN rm -rf /install-templates
+RUN apt-get update \
+&& apt-get install --yes --no-install-recommends \
+	make \
+	git-core \
+	pandoc \
+	pandoc-citeproc \
+&& mkdir /install-templates \
+&& cd /install-templates \
+&& git clone https://github.com/benizar/pandoc-templates.git \
+&& cp -a pandoc-templates/res/templates/cv/. /usr/share/pandoc/data/templates/ \
+&& cd /source \
+&& rm -rf /install-templates \
+&& apt-get remove --purge -y \
+	git-core \
+&& apt-get autoremove -y \
+&& apt-get clean \
+&& rm -Rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENTRYPOINT ["pandoc"]
 

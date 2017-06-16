@@ -1,22 +1,30 @@
-FROM ruby:2.4
+FROM ubuntu:16.04
 
-# Set the locale
+ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-# Install basics
-RUN apt-get update && apt-get install -y \
-    node \
-    python-pygments \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+&& apt-get install --yes --no-install-recommends \
+	build-essential \
+	ruby \
+	ruby-dev \
+	zlib1g-dev \
+&& gem install --no-ri --no-rdoc \
+	jekyll \
+	bundler \
+	github-pages \
+	jekyll-scholar \
+	therubyracer \
+&& apt-get remove --purge -y \
+	build-essential \
+	ruby-dev \
+	zlib1g-dev \
+&& apt-get autoremove -y \
+&& apt-get clean \
+&& rm -Rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install Gems
-RUN gem install \
-  jekyll \
-  bundler \
-  github-pages \
-  jekyll-scholar
-
-VOLUME /home
 EXPOSE 4000
-WORKDIR /home
+
+VOLUME /source
+WORKDIR /source
