@@ -1,6 +1,8 @@
 FROM benizar/texlive
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
 # Install PANDOC
 RUN apt-get update \
@@ -20,6 +22,9 @@ RUN apt-get update \
 && apt-get autoremove -y \
 && apt-get clean \
 && rm -Rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+VOLUME /source
+WORKDIR /source
 
 ENTRYPOINT ["pandoc"]
 
