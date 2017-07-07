@@ -13,11 +13,6 @@ build_date :=$(shell date --rfc-3339=seconds)
 
 #names := $(shell find . -name 'Dockerfile' -printf '%h\n' | sed -e 's/^\.\///') # | sort -u)
 
-#names := image3 \
-#	image2 \
-#	image1 \
-#	image4
-
 names := texlive \
 	pandoc \
 	jekyll
