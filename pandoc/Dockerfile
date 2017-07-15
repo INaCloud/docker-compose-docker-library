@@ -1,8 +1,8 @@
 FROM benizar/texlive
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+ENV LANG es_ES.UTF-8
+ENV LC_ALL es_ES.UTF-8
 
 # Install PANDOC
 RUN apt-get update \
