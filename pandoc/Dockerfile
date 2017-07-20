@@ -21,7 +21,7 @@ RUN apt-get update \
 	git-core \
 && apt-get autoremove -y \
 && apt-get clean \
-&& rm -Rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 VOLUME /source
 WORKDIR /source
