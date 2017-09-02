@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG es_ES.UTF-8

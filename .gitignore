@@ -1,5 +1,6 @@
 .docker-identity
 *~
+stamps/*
 
 # History files
 .Rhistory

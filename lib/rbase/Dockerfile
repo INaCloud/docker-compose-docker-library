@@ -49,15 +49,5 @@ RUN apt-get update \
  	&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
  	&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update \
-        && apt-get install -y --no-install-recommends \
-		r-cran-reshape2 \
-		r-cran-plyr \
-		r-cran-diagrammer \
- 	&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
- 	&& rm -rf /var/lib/apt/lists/*
-
-RUN R -e "install.packages('yaml', repos = 'http://cran.rstudio.com')"
-
 CMD ["bash"]
 

@@ -1,4 +1,4 @@
-FROM postgres:9.6
+FROM postgres
 
 # Install packages required for developing extensions on Postgres
 RUN apt-get update \

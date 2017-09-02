@@ -1,4 +1,4 @@
-FROM benizar/postgres-ext
+FROM benizar/pgext
 
 ENV POSTGIS_MAJOR 2.3
 ENV POSTGIS_VERSION 2.3.2+dfsg-1~exp2.pgdg80+1

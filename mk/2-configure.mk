@@ -1,8 +1,9 @@
-
-#
-# Label schema Convention DRAFT (1.0.0-rc.1)
+# Based on the Label schema Convention DRAFT (1.0.0-rc.1)
 # http://label-schema.org/rc1/
-#
+# Use these labels for filtering images created with these metadata
+# For example, you can do:
+# docker images --filter "label=org.label-schema.vendor=benizar"
+
 
 # This label contains the Date/Time the image was built. The value SHOULD be formatted according to RFC 3339.
 build_date :=$(shell date --rfc-3339=seconds)
@@ -13,9 +14,11 @@ build_date :=$(shell date --rfc-3339=seconds)
 
 #names := $(shell find . -name 'Dockerfile' -printf '%h\n' | sed -e 's/^\.\///') # | sort -u)
 
-names := texlive \
-	pandoc \
-	jekyll
+#names := image3 \
+#	image2 \
+#	image1 \
+#	image4
+
 
 # Text description of the image. May contain up to 300 characters.
 description := This image is part of my docker stack for reproducible research. Check every service README.md to see how I use it.
@@ -41,5 +44,4 @@ release_type := $(if $(filter %-SNAPSHOT, $(version)),snapshot,release)
 
 # This label SHOULD be present to indicate the version of Label schema in use.
 schema_version := 1.0
-
 
