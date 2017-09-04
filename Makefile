@@ -13,17 +13,18 @@ all: pull-all build-all push-all
 ## Build all images locally.
 build-all: $(build_targets)
 
+
 ## Pull all required images from the registry.
 pull-all: $(pull_targets)
-	@echo "Pulling all required images..."
+
 
 ## Push all images to the registry.
 push-all: $(push_targets)
-	@echo "Pushing all images..."
+
 
 ## Clean images built by this Makefile.
 clean: $(clean_targets)
-	@echo "Cleaning stamps and images built by this Makefile..."
+
 
 ## Clean images built or pulled by this Makefile. However, there is no need to delete official images, since they could have existed anyway.
 distclean:

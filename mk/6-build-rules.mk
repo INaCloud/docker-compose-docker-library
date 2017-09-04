@@ -5,7 +5,7 @@ build-$1: build-$$(imagename_$1)
 
 build-$$(imagename_$1): $(stamps_dir)/built-$$(imagename_$1)
 
-ifneq (,$$(findstring $$(from_$1),$(from_library)))
+ifneq (,$$(filter $$(from_$1),$(from_library)))
 # Found in this lib
 $(stamps_dir)/built-$$(imagename_$1): $(stamps_dir)/built-$$(notdir $$(from_$1)) $$(dockerfile_$1) | checkdirs
 else
@@ -29,7 +29,7 @@ endif
 		$(lib_dir)/$$(imagename_$1) # dockerfile context (its folder's name)
 	@touch $$@
 
-built_targets+= $(stamps_dir)/built-$$(imagename_$1)
+build_targets+= $(stamps_dir)/built-$$(imagename_$1)
 
 endef
 

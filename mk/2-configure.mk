@@ -10,10 +10,6 @@ build_date :=$(shell date --rfc-3339=seconds)
 
 # A human friendly name for the image. For example, this could be the name of a microservice in a microservice architecture.
 # list all the "docker directories" eg: image1 image2
-# Maybe we can get a dependency tree sed -n 's/^ *FROM *//p;q;' $(1)/Dockerfile
-
-#names := $(shell find . -name 'Dockerfile' -printf '%h\n' | sed -e 's/^\.\///') # | sort -u)
-
 #names := image3 \
 #	image2 \
 #	image1 \
@@ -39,8 +35,7 @@ vcs_ref := $(shell git rev-parse --verify HEAD)
 vendor := benizar
 
 # The version MAY match a label or tag in the source code repository.
-version := 0.1.0-SNAPSHOT
-release_type := $(if $(filter %-SNAPSHOT, $(version)),snapshot,release)
+version := 0.1.0
 
 # This label SHOULD be present to indicate the version of Label schema in use.
 schema_version := 1.0

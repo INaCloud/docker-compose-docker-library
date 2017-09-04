@@ -41,7 +41,7 @@ from_$1=$$(shell sed -n 's/FROM *//p;q;' $$(dockerfile_$1))
 
 # TODO: Separate official, base images (local or dockerhub) and target images.
 # Check whether a "FROM dependency" can be built from this library or not
-ifneq (,$$(findstring $$(from_$1),$(images)))
+ifneq (,$$(filter $$(from_$1),$(images)))
 	# Base images found in this lib
 	from_library+= $$(from_$1)
 	from_library:=$$(sort $$(from_library)) # Sort also removes duplicates, which is the desired effect...
@@ -63,6 +63,7 @@ $(foreach x,$(images),\
 ## Write down the project file
 setup:
 	@echo images = $(images)
+	@echo names = $(names)
 	@echo dockerfiles = $(dockerfiles)
 	@echo from_library = $(from_library)
 	@echo from_dockerhub = $(from_dockerhub)
