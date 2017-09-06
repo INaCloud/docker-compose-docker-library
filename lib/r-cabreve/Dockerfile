@@ -7,6 +7,11 @@ RUN apt-get update \
 		r-cran-reshape2 \
 		r-cran-plyr \
 		r-cran-visnetwork \
+		r-cran-igraph \
+		r-cran-diagrammer \
  	&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
  	&& rm -rf /var/lib/apt/lists/*
 
+
+VOLUME /source
+WORKDIR /source
