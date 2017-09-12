@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  rstudio-server:
+    container_name: rstudio-server
+    build:
+      context: latest
+    image: dceoy/rstudio-server:latest
+    ports:
+      - "8787:8787"
+    volumes:
+      - ${HOME}:/home/rstudio
+    working_dir: /home/rstudio
