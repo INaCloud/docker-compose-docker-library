@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:16.04
 
 ENV CRAN_URL https://cloud.r-project.org/
 
