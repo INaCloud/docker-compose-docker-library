@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:16.04
 
 ## Set a default user. Available via runtime flag `--user docker` 
 ## Add user to 'staff' group, granting them write privileges to /usr/local/lib/R/site.library
