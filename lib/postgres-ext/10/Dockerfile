@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:10
 
 # Install packages required for developing extensions on Postgres
 RUN apt-get update \
@@ -7,6 +7,7 @@ RUN apt-get update \
 	checkinstall \
 	apt-utils \
 	wget \
+	ca-certificates \
 	git-core \
 	postgresql-server-dev-$PG_MAJOR \
 	postgresql-contrib-$PG_MAJOR \

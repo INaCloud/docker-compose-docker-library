@@ -1,4 +1,4 @@
-# benizar/postgres-ext
+# siose-innova/postgres-ext
 
 Postgres docker for developing extensions and testing.
 

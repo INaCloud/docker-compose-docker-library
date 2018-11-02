@@ -1,4 +1,4 @@
-# benizar/postgis-ext
+# siose-innova/postgis-ext
 
 Postgis docker for developing extensions and testing.
 

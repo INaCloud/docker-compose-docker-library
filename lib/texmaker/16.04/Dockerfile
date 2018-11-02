@@ -1,4 +1,4 @@
-FROM benizar/texlive
+FROM texlive:16.04
 
 RUN sed -i 's/main/main contrib non-free/g' /etc/apt/sources.list
 

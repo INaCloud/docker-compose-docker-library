@@ -1,6 +1,6 @@
-FROM benizar/postgres-ext
+FROM postgres-ext:10
 
-ENV POSTGIS_MAJOR 2.3
+ENV POSTGIS_MAJOR 2.4
 
 RUN apt-get update \
 && apt-get install --yes --no-install-recommends \
@@ -10,5 +10,4 @@ RUN apt-get update \
 && apt-get autoremove -y \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 
